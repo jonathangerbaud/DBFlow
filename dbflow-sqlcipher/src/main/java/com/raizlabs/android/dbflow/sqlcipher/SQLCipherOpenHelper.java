@@ -15,7 +15,7 @@ import com.raizlabs.android.dbflow.structure.database.OpenHelper;
 
 import net.zetetic.database.sqlcipher.SQLiteDatabase;
 import net.zetetic.database.sqlcipher.SQLiteOpenHelper;
-import net.zetetic.database.sqlcipher.SupportFactory;
+import net.zetetic.database.sqlcipher.SupportOpenHelperFactory;
 import net.zetetic.database.sqlcipher.SQLiteDatabaseConfiguration;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -69,10 +69,22 @@ public abstract class SQLCipherOpenHelper extends SQLiteOpenHelper implements Op
             // Load native SQLCipher libs once in your Application.onCreate()
             System.loadLibrary("sqlcipher");
 
-            byte[] passphrase = getCipherSecret().getBytes(StandardCharsets.UTF_8);
-            SupportFactory factory = new SupportFactory(passphrase);
+            String secret = getCipherSecret();
+
+            // Convert to bytes via String.getBytes() since getBytes(char[]) may be non‐public
+            byte[] passphrase = secret.getBytes(StandardCharsets.UTF_8);
+
+            // Database file
+            File dbFile = FlowManager.getContext().getDatabasePath("encrypted.db");
+            dbFile.getParentFile().mkdirs();
+
+            // Build config
+            SQLiteDatabaseConfiguration config =
+                new SQLiteDatabaseConfiguration(dbFile.getAbsolutePath(), passphrase);
+
+            cipherDatabase = SQLiteDatabase.openOrCreateDatabase(config, null);
             // Wrap if you need a SQLCipherDatabase instance
-            cipherDatabase = (SQLiteDatabase) factory.create().getReadableDatabase();
+            //cipherDatabase = (SQLiteDatabase) factory.create().getReadableDatabase();
         }
         return cipherDatabase;
     }
@@ -133,10 +145,23 @@ public abstract class SQLCipherOpenHelper extends SQLiteOpenHelper implements Op
                 // Load native SQLCipher libs once in your Application.onCreate()
                 System.loadLibrary("sqlcipher");
 
-                byte[] passphrase = getCipherSecret().getBytes(StandardCharsets.UTF_8);
-                SupportFactory factory = new SupportFactory(passphrase);
-                // Wrap if you need a SQLCipherDatabase instance
-                sqlCipherDatabase = (SQLiteDatabase) factory.create().getReadableDatabase();
+                String secret = getCipherSecret();
+
+                // Convert to bytes via String.getBytes() since getBytes(char[]) may be non‐public
+                byte[] passphrase = secret.getBytes(StandardCharsets.UTF_8);
+
+                // Database file
+                File dbFile = FlowManager.getContext().getDatabasePath("encrypted_backup.db");
+                dbFile.getParentFile().mkdirs();
+
+                // Build config
+                SQLiteDatabaseConfiguration config =
+                    new SQLiteDatabaseConfiguration(dbFile.getAbsolutePath(), passphrase);
+
+                sqlCipherDatabase = SQLiteDatabase.openOrCreateDatabase(config, null);
+
+
+
                // sqlCipherDatabase = SQLCipherDatabase.from(getWritableDatabase(getCipherSecret()));
             }
             return sqlCipherDatabase;
