@@ -15,7 +15,7 @@ import com.raizlabs.android.dbflow.structure.database.OpenHelper;
 
 import net.zetetic.database.sqlcipher.SQLiteDatabase;
 import net.zetetic.database.sqlcipher.SQLiteOpenHelper;
-import net.zetetic.database.sqlcipher.SQLiteDatabaseConfiguration
+import net.zetetic.database.sqlcipher.SQLiteDatabaseConfiguration;
 import java.io.File;;
 /**
  * Description: The replacement {@link OpenHelper} for SQLCipher. Specify a subclass of this is {@link DatabaseConfig#databaseClass()}
