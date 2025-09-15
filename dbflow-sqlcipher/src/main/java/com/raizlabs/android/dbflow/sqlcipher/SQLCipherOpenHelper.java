@@ -69,7 +69,7 @@ public abstract class SQLCipherOpenHelper extends SQLiteOpenHelper implements Op
 
             // Convert your passphrase to bytes
             char[] passphraseChars = getCipherSecret().toCharArray();
-            byte[] passphrase = SQLiteDatabase.getBytes(new String(passphraseChars));
+            byte[] passphrase = SQLiteDatabase.getBytes(passphraseChars);
 
             // Open or create the encrypted database
             File dbFile = FlowManager.getContext().getDatabasePath("encrypted.db");
@@ -146,7 +146,7 @@ public abstract class SQLCipherOpenHelper extends SQLiteOpenHelper implements Op
 
                 // Convert your passphrase to bytes
                 char[] passphraseChars = getCipherSecret().toCharArray();
-                byte[] passphrase = SQLiteDatabase.getBytes(new String(passphraseChars));
+                byte[] passphrase = SQLiteDatabase.getBytes(passphraseChars);
 
                 // Open or create the encrypted database
                 File dbFile = FlowManager.getContext().getDatabasePath("encrypted_backup.db");
