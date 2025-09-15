@@ -15,7 +15,7 @@ import com.raizlabs.android.dbflow.structure.database.OpenHelper;
 
 import net.zetetic.database.sqlcipher.SQLiteDatabase;
 import net.zetetic.database.sqlcipher.SQLiteOpenHelper;
-
+import net.zetetic.database.sqlcipher.SQLiteDatabaseConfiguration;
 /**
  * Description: The replacement {@link OpenHelper} for SQLCipher. Specify a subclass of this is {@link DatabaseConfig#databaseClass()}
  * of your database to get it to work with specifying the secret you use for the database.
@@ -27,8 +27,6 @@ public abstract class SQLCipherOpenHelper extends SQLiteOpenHelper implements Op
 
     public SQLCipherOpenHelper(DatabaseDefinition databaseDefinition, DatabaseHelperListener listener) {
         super(FlowManager.getContext(), databaseDefinition.isInMemory() ? null : databaseDefinition.getDatabaseFileName(), null, databaseDefinition.getDatabaseVersion());
-        SQLiteDatabase.loadLibs(FlowManager.getContext());
-        System.loadLibrary("sqlcipher");
 
         OpenHelper backupHelper = null;
         if (databaseDefinition.backupEnabled()) {
@@ -65,7 +63,26 @@ public abstract class SQLCipherOpenHelper extends SQLiteOpenHelper implements Op
     @Override
     public DatabaseWrapper getDatabase() {
         if (cipherDatabase == null || !cipherDatabase.getDatabase().isOpen()) {
-            cipherDatabase = SQLCipherDatabase.from(getWritableDatabase(getCipherSecret()));
+            // Load native SQLCipher libs once in your Application.onCreate()
+            System.loadLibrary("sqlcipher");
+
+            // Convert your passphrase to bytes
+            char[] passphraseChars = getCipherSecret().toCharArray();
+            byte[] passphrase = SQLiteDatabase.getBytes(passphraseChars);
+
+            // Open or create the encrypted database
+            File dbFile = context.getDatabasePath("encrypted.db");
+
+            // Ensure the directory exists
+            dbFile.getParentFile().mkdirs();
+
+            SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(
+                new SQLiteDatabaseConfiguration(dbFile.getPath(), passphrase),
+                null // DatabaseErrorHandler (optional, can pass null)
+            );
+
+            // Wrap if you need a SQLCipherDatabase instance
+            sqlCipherDatabase = SQLCipherDatabase.from(db);
         }
         return cipherDatabase;
     }
@@ -123,7 +140,27 @@ public abstract class SQLCipherOpenHelper extends SQLiteOpenHelper implements Op
         @Override
         public DatabaseWrapper getDatabase() {
             if (sqlCipherDatabase == null) {
-                sqlCipherDatabase = SQLCipherDatabase.from(getWritableDatabase(getCipherSecret()));
+                // Load native SQLCipher libs once in your Application.onCreate()
+                System.loadLibrary("sqlcipher");
+
+                // Convert your passphrase to bytes
+                char[] passphraseChars = getCipherSecret().toCharArray();
+                byte[] passphrase = SQLiteDatabase.getBytes(passphraseChars);
+
+                // Open or create the encrypted database
+                File dbFile = context.getDatabasePath("encrypted_backup.db");
+
+                // Ensure the directory exists
+                dbFile.getParentFile().mkdirs();
+
+                SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(
+                    new SQLiteDatabaseConfiguration(dbFile.getPath(), passphrase),
+                    null // DatabaseErrorHandler (optional, can pass null)
+                );
+
+                // Wrap if you need a SQLCipherDatabase instance
+                sqlCipherDatabase = SQLCipherDatabase.from(db);
+               // sqlCipherDatabase = SQLCipherDatabase.from(getWritableDatabase(getCipherSecret()));
             }
             return sqlCipherDatabase;
         }
