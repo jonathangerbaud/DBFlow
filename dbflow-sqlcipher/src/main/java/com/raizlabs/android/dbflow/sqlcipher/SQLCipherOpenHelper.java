@@ -13,8 +13,8 @@ import com.raizlabs.android.dbflow.structure.database.DatabaseHelperListener;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 import com.raizlabs.android.dbflow.structure.database.OpenHelper;
 
-import net.sqlcipher.database.SQLiteDatabase;
-import net.sqlcipher.database.SQLiteOpenHelper;
+import net.zetetic.database.sqlcipher.SQLiteDatabase;
+import net.zetetic.database.sqlcipher.SQLiteOpenHelper;
 
 /**
  * Description: The replacement {@link OpenHelper} for SQLCipher. Specify a subclass of this is {@link DatabaseConfig#databaseClass()}
@@ -28,6 +28,7 @@ public abstract class SQLCipherOpenHelper extends SQLiteOpenHelper implements Op
     public SQLCipherOpenHelper(DatabaseDefinition databaseDefinition, DatabaseHelperListener listener) {
         super(FlowManager.getContext(), databaseDefinition.isInMemory() ? null : databaseDefinition.getDatabaseFileName(), null, databaseDefinition.getDatabaseVersion());
         SQLiteDatabase.loadLibs(FlowManager.getContext());
+        System.loadLibrary("sqlcipher");
 
         OpenHelper backupHelper = null;
         if (databaseDefinition.backupEnabled()) {

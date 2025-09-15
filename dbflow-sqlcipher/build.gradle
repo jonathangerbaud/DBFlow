@@ -23,7 +23,7 @@ android {
 }
 
 dependencies {
-    api "net.zetetic:android-database-sqlcipher:4.6.1@aar"
+    api "net.zetetic:sqlcipher-android:4.6.1@aar"
     api project("${dbflow_project_prefix}dbflow")
 }
 

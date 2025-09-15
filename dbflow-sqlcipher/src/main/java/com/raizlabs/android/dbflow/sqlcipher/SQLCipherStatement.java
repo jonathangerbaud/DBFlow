@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 import com.raizlabs.android.dbflow.structure.database.BaseDatabaseStatement;
 import com.raizlabs.android.dbflow.structure.database.DatabaseStatement;
 
-import net.sqlcipher.database.SQLiteStatement;
+import net.zetetic.database.sqlcipher.SQLiteStatement;
 
 /**
  * Description: Implements the methods necessary for {@link DatabaseStatement}. Delegates calls to
