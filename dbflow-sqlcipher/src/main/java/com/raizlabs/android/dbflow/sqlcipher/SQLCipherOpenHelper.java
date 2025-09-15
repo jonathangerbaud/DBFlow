@@ -69,7 +69,7 @@ public abstract class SQLCipherOpenHelper extends SQLiteOpenHelper implements Op
             System.loadLibrary("sqlcipher");
 
             byte[] passphrase = getCipherSecret().getBytes(StandardCharsets.UTF_8);
-            this.factory = new SupportFactory(passphrase);
+            SupportFactory factory = new SupportFactory(passphrase);
             // Wrap if you need a SQLCipherDatabase instance
             cipherDatabase = (SQLiteDatabase) factory.create().getReadableDatabase();
         }
@@ -133,7 +133,7 @@ public abstract class SQLCipherOpenHelper extends SQLiteOpenHelper implements Op
                 System.loadLibrary("sqlcipher");
 
                 byte[] passphrase = getCipherSecret().getBytes(StandardCharsets.UTF_8);
-                this.factory = new SupportFactory(passphrase);
+                SupportFactory factory = new SupportFactory(passphrase);
                 // Wrap if you need a SQLCipherDatabase instance
                 sqlCipherDatabase = (SQLiteDatabase) factory.create().getReadableDatabase();
                // sqlCipherDatabase = SQLCipherDatabase.from(getWritableDatabase(getCipherSecret()));
