@@ -24,6 +24,7 @@ android {
 
 dependencies {
     api "net.zetetic:sqlcipher-android:4.6.1@aar"
+    api 'androidx.sqlite:sqlite:2.2.0'
     api project("${dbflow_project_prefix}dbflow")
 }
 
