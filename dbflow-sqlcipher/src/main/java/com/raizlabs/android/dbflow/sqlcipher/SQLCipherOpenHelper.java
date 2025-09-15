@@ -17,7 +17,8 @@ import net.zetetic.database.sqlcipher.SQLiteDatabase;
 import net.zetetic.database.sqlcipher.SQLiteOpenHelper;
 import net.zetetic.database.sqlcipher.SupportFactory;
 import net.zetetic.database.sqlcipher.SQLiteDatabaseConfiguration;
-import java.io.File;;
+import java.io.File;
+import java.nio.charset.StandardCharsets;
 /**
  * Description: The replacement {@link OpenHelper} for SQLCipher. Specify a subclass of this is {@link DatabaseConfig#databaseClass()}
  * of your database to get it to work with specifying the secret you use for the database.
