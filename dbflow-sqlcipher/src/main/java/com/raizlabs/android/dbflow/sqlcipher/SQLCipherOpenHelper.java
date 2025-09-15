@@ -15,6 +15,7 @@ import com.raizlabs.android.dbflow.structure.database.OpenHelper;
 
 import net.zetetic.database.sqlcipher.SQLiteDatabase;
 import net.zetetic.database.sqlcipher.SQLiteOpenHelper;
+import net.zetetic.database.sqlcipher.SupportFactory;
 import net.zetetic.database.sqlcipher.SQLiteDatabaseConfiguration;
 import java.io.File;;
 /**
@@ -67,23 +68,10 @@ public abstract class SQLCipherOpenHelper extends SQLiteOpenHelper implements Op
             // Load native SQLCipher libs once in your Application.onCreate()
             System.loadLibrary("sqlcipher");
 
-            // Convert your passphrase to bytes
-            char[] passphraseChars = getCipherSecret().toCharArray();
-            byte[] passphrase = SQLiteDatabase.getBytes(passphraseChars);
-
-            // Open or create the encrypted database
-            File dbFile = FlowManager.getContext().getDatabasePath("encrypted.db");
-
-            // Ensure the directory exists
-            dbFile.getParentFile().mkdirs();
-
-            SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(
-                new SQLiteDatabaseConfiguration(dbFile.getPath(), passphrase),
-                null // DatabaseErrorHandler (optional, can pass null)
-            );
-
+            byte[] passphrase = getCipherSecret().getBytes(StandardCharsets.UTF_8);
+            this.factory = new SupportFactory(passphrase);
             // Wrap if you need a SQLCipherDatabase instance
-            cipherDatabase = SQLCipherDatabase.from(db);
+            cipherDatabase = (SQLiteDatabase) factory.create().getReadableDatabase();
         }
         return cipherDatabase;
     }
@@ -144,23 +132,10 @@ public abstract class SQLCipherOpenHelper extends SQLiteOpenHelper implements Op
                 // Load native SQLCipher libs once in your Application.onCreate()
                 System.loadLibrary("sqlcipher");
 
-                // Convert your passphrase to bytes
-                char[] passphraseChars = getCipherSecret().toCharArray();
-                byte[] passphrase = SQLiteDatabase.getBytes(passphraseChars);
-
-                // Open or create the encrypted database
-                File dbFile = FlowManager.getContext().getDatabasePath("encrypted_backup.db");
-
-                // Ensure the directory exists
-                dbFile.getParentFile().mkdirs();
-
-                SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(
-                    new SQLiteDatabaseConfiguration(dbFile.getPath(), passphrase),
-                    null // DatabaseErrorHandler (optional, can pass null)
-                );
-
+                byte[] passphrase = getCipherSecret().getBytes(StandardCharsets.UTF_8);
+                this.factory = new SupportFactory(passphrase);
                 // Wrap if you need a SQLCipherDatabase instance
-                sqlCipherDatabase = SQLCipherDatabase.from(db);
+                sqlCipherDatabase = (SQLiteDatabase) factory.create().getReadableDatabase();
                // sqlCipherDatabase = SQLCipherDatabase.from(getWritableDatabase(getCipherSecret()));
             }
             return sqlCipherDatabase;
