@@ -15,7 +15,8 @@ import com.raizlabs.android.dbflow.structure.database.OpenHelper;
 
 import net.zetetic.database.sqlcipher.SQLiteDatabase;
 import net.zetetic.database.sqlcipher.SQLiteOpenHelper;
-import net.zetetic.database.sqlcipher.SQLiteDatabaseConfiguration;
+import net.zetetic.database.sqlcipher.SQLiteDatabaseConfiguration
+import java.io.File;;
 /**
  * Description: The replacement {@link OpenHelper} for SQLCipher. Specify a subclass of this is {@link DatabaseConfig#databaseClass()}
  * of your database to get it to work with specifying the secret you use for the database.
@@ -68,10 +69,10 @@ public abstract class SQLCipherOpenHelper extends SQLiteOpenHelper implements Op
 
             // Convert your passphrase to bytes
             char[] passphraseChars = getCipherSecret().toCharArray();
-            byte[] passphrase = SQLiteDatabase.getBytes(passphraseChars);
+            byte[] passphrase = SQLiteDatabase.getBytes(new String(passphraseChars));
 
             // Open or create the encrypted database
-            File dbFile = context.getDatabasePath("encrypted.db");
+            File dbFile = FlowManager.getContext().getDatabasePath("encrypted.db");
 
             // Ensure the directory exists
             dbFile.getParentFile().mkdirs();
@@ -82,7 +83,7 @@ public abstract class SQLCipherOpenHelper extends SQLiteOpenHelper implements Op
             );
 
             // Wrap if you need a SQLCipherDatabase instance
-            sqlCipherDatabase = SQLCipherDatabase.from(db);
+            cipherDatabase = SQLCipherDatabase.from(db);
         }
         return cipherDatabase;
     }
@@ -145,10 +146,10 @@ public abstract class SQLCipherOpenHelper extends SQLiteOpenHelper implements Op
 
                 // Convert your passphrase to bytes
                 char[] passphraseChars = getCipherSecret().toCharArray();
-                byte[] passphrase = SQLiteDatabase.getBytes(passphraseChars);
+                byte[] passphrase = SQLiteDatabase.getBytes(new String(passphraseChars));
 
                 // Open or create the encrypted database
-                File dbFile = context.getDatabasePath("encrypted_backup.db");
+                File dbFile = FlowManager.getContext().getDatabasePath("encrypted_backup.db");
 
                 // Ensure the directory exists
                 dbFile.getParentFile().mkdirs();
