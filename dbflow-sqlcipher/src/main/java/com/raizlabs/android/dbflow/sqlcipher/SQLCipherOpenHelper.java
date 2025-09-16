@@ -28,7 +28,7 @@ import java.nio.charset.StandardCharsets;
 public abstract class SQLCipherOpenHelper extends SQLiteOpenHelper implements OpenHelper {
 
     private DatabaseHelperDelegate databaseHelperDelegate;
-    private SQLCipherDatabase cipherDatabase;
+    private SQLiteDatabase cipherDatabase;
 
     public SQLCipherOpenHelper(DatabaseDefinition databaseDefinition, DatabaseHelperListener listener) {
         super(FlowManager.getContext(), databaseDefinition.isInMemory() ? null : databaseDefinition.getDatabaseFileName(), null, databaseDefinition.getDatabaseVersion());
