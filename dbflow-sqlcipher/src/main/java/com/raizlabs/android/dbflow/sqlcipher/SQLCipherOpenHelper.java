@@ -18,6 +18,7 @@ import net.zetetic.database.sqlcipher.SQLiteOpenHelper;
 import net.zetetic.database.sqlcipher.SupportOpenHelperFactory;
 import net.zetetic.database.sqlcipher.SQLiteDatabaseConfiguration;
 import net.zetetic.database.sqlcipher.SQLiteDatabaseHook;
+import net.zetetic.database.sqlcipher.SQLiteConnection;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 /**
@@ -80,7 +81,7 @@ public abstract class SQLCipherOpenHelper extends SQLiteOpenHelper implements Op
                 public void postKey(SQLiteConnection connection) {}
             };
 
-            cipherDatabase = SQLiteDatabase.openOrCreateDatabase(databaseFile.getAbsolutePath(), "testkey", null, null, hook);
+            cipherDatabase = SQLiteDatabase.openOrCreateDatabase(dbFile.getAbsolutePath(), "testkey", null, null, hook);
         }
         return cipherDatabase;
     }
@@ -151,7 +152,7 @@ public abstract class SQLCipherOpenHelper extends SQLiteOpenHelper implements Op
                     public void postKey(SQLiteConnection connection) {}
                 };
 
-                sqlCipherDatabase = SQLiteDatabase.openOrCreateDatabase(databaseFile.getAbsolutePath(), "testkey", null, null, hook);
+                sqlCipherDatabase = SQLiteDatabase.openOrCreateDatabase(dbFile.getAbsolutePath(), "testkey", null, null, hook);
             }
             return sqlCipherDatabase;
         }
