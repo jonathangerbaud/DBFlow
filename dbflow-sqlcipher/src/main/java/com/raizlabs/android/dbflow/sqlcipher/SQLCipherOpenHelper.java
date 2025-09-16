@@ -66,8 +66,8 @@ public abstract class SQLCipherOpenHelper extends SQLiteOpenHelper implements Op
 
     @NonNull
     @Override
-    public DatabaseWrapper getDatabase() {
-        if (cipherDatabase == null || !cipherDatabase.getDatabase().isOpen()) {
+    public SQLiteDatabase getDatabase() {
+        if (cipherDatabase == null || !cipherDatabase.isOpen()) {
             // Load native SQLCipher libs once in your Application.onCreate()
             // Load native SQLCipher libs once in your Application.onCreate()
             System.loadLibrary("sqlcipher");
@@ -114,7 +114,7 @@ public abstract class SQLCipherOpenHelper extends SQLiteOpenHelper implements Op
     @Override
     public void closeDB() {
         getDatabase();
-        cipherDatabase.getDatabase().close();
+        cipherDatabase.close();
     }
 
     /**
@@ -137,7 +137,7 @@ public abstract class SQLCipherOpenHelper extends SQLiteOpenHelper implements Op
 
         @NonNull
         @Override
-        public DatabaseWrapper getDatabase() {
+        public SQLiteDatabase getDatabase() {
             if (sqlCipherDatabase == null)
             {
                 // Load native SQLCipher libs once in your Application.onCreate()
