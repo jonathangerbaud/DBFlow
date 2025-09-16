@@ -127,7 +127,7 @@ public abstract class SQLCipherOpenHelper extends SQLiteOpenHelper implements Op
      */
     private class BackupHelper extends SQLiteOpenHelper implements OpenHelper {
 
-        private SQLCipherDatabase sqlCipherDatabase;
+        private SQLiteDatabase sqlCipherDatabase;
         private final BaseDatabaseHelper baseDatabaseHelper;
 
         public BackupHelper(Context context, String name, int version, DatabaseDefinition databaseDefinition) {
